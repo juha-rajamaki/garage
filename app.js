@@ -86,11 +86,50 @@ function renderBoard() {
   });
 }
 
+// ── 3D Viewer Modal ──
+const viewerOverlay = document.getElementById('viewer-overlay');
+const viewerAdd     = document.getElementById('viewer-add');
+
+function open3DViewer(key) {
+  viewerOverlay.classList.remove('hidden');
+  viewerAdd.dataset.key = key;
+}
+
+function close3DViewer() {
+  viewerOverlay.classList.add('hidden');
+}
+
+function bind3DViewer() {
+  document.getElementById('viewer-close').addEventListener('click', close3DViewer);
+  viewerOverlay.addEventListener('click', e => {
+    if (e.target === viewerOverlay) close3DViewer();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') close3DViewer();
+  });
+  viewerAdd.addEventListener('click', () => {
+    const key = viewerAdd.dataset.key;
+    if (key) {
+      visible.add(key);
+      saveState();
+      renderBoard();
+      updateSidebarStates();
+      close3DViewer();
+    }
+  });
+}
+
 // ── Sidebar toggle ──
 function bindSidebar() {
   document.querySelectorAll('.lib-car').forEach(el => {
     const key = el.dataset.key;
-    el.addEventListener('click', () => {
+    el.addEventListener('click', e => {
+      // If this car has a 3D model and is not yet on the board, open viewer
+      if (key === 'porsche' && !visible.has(key)) {
+        open3DViewer(key);
+        return;
+      }
+      // Otherwise toggle
       if (visible.has(key)) {
         visible.delete(key);
         el.classList.remove('active');
@@ -137,6 +176,7 @@ function init() {
   loadState();
   renderBoard();
   bindSidebar();
+  bind3DViewer();
   updateSidebarStates();
   bindToolbar();
 }
