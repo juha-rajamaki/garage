@@ -20,76 +20,37 @@
       <span class="app-title">Garage Planner</span>
     </div>
     <div class="toolbar-right">
-      <button id="btn-reset" class="btn btn-ghost">Reset Board</button>
-      <button id="btn-save" class="btn btn-primary">Save Layout</button>
+      <button id="btn-reset" class="btn btn-ghost">Tyhjennä talli</button>
     </div>
   </header>
 
   <!-- Main layout -->
   <div id="app">
 
-    <!-- Sidebar: car library -->
+    <!-- Sidebar -->
     <aside id="sidebar">
-      <h2 class="sidebar-title">Garage Cars</h2>
-      <p class="sidebar-hint">Klikkaa näyttääksesi / piilottaaksesi auton tallissa</p>
+      <h2 class="sidebar-title">Autot</h2>
+      <p class="sidebar-hint">Klikkaa lisätäksesi tai poistaaksesi auton tallista</p>
 
       <div class="library-grid">
 
-        <!-- BMW Z4 35is -->
-        <div class="lib-car" data-make="BMW" data-model="Z4 35is">
-          <div class="lib-car-icon">
-            <svg viewBox="0 0 80 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <ellipse cx="40" cy="22" rx="36" ry="6" fill="#1a1a1a" opacity="0.4"/>
-              <path d="M8 20 Q12 10 22 8 Q30 5 40 5 Q52 5 62 9 Q70 12 72 20 Z" fill="#1a1a1a"/>
-              <path d="M20 20 Q22 12 30 10 Q38 8 48 10 Q56 12 58 20" fill="#2c2c2c"/>
-              <rect x="14" y="18" width="52" height="5" rx="2" fill="#111"/>
-              <circle cx="20" cy="23" r="4" fill="#0a0a0a" stroke="#555" stroke-width="1"/>
-              <circle cx="20" cy="23" r="2" fill="#222"/>
-              <circle cx="60" cy="23" r="4" fill="#0a0a0a" stroke="#555" stroke-width="1"/>
-              <circle cx="60" cy="23" r="2" fill="#222"/>
-              <rect x="62" y="14" width="8" height="4" rx="1" fill="#3a90ff" opacity="0.9"/>
-              <rect x="8" y="14" width="6" height="4" rx="1" fill="#ff4444" opacity="0.7"/>
-            </svg>
+        <div class="lib-car" data-key="bmw">
+          <div class="lib-car-img">
+            <img src="car-bmw.png" alt="BMW Z4 35is" />
           </div>
           <span class="lib-car-name">BMW Z4 35is</span>
         </div>
 
-        <!-- Porsche Panamera E-Hybrid -->
-        <div class="lib-car" data-make="Porsche" data-model="Panamera E-Hybrid">
-          <div class="lib-car-icon">
-            <svg viewBox="0 0 80 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <ellipse cx="40" cy="22" rx="36" ry="6" fill="#4a4a4a" opacity="0.4"/>
-              <path d="M8 20 Q10 12 20 9 Q30 6 40 6 Q52 6 62 10 Q70 13 72 20 Z" fill="#5a5a5a"/>
-              <path d="M18 20 Q20 12 30 10 Q40 8 50 10 Q58 12 60 20" fill="#6e6e6e"/>
-              <rect x="12" y="18" width="56" height="5" rx="2" fill="#3a3a3a"/>
-              <circle cx="20" cy="23" r="4" fill="#0a0a0a" stroke="#666" stroke-width="1"/>
-              <circle cx="20" cy="23" r="2" fill="#222"/>
-              <circle cx="60" cy="23" r="4" fill="#0a0a0a" stroke="#666" stroke-width="1"/>
-              <circle cx="60" cy="23" r="2" fill="#222"/>
-              <rect x="62" y="14" width="8" height="4" rx="1" fill="#ffe082" opacity="0.9"/>
-              <rect x="8" y="14" width="6" height="4" rx="1" fill="#ffe082" opacity="0.7"/>
-            </svg>
+        <div class="lib-car" data-key="porsche">
+          <div class="lib-car-img">
+            <img src="car-porsche.png" alt="Porsche Panamera" />
           </div>
           <span class="lib-car-name">Porsche Panamera</span>
         </div>
 
-        <!-- Jeep Wrangler Rubicon -->
-        <div class="lib-car" data-make="Jeep" data-model="Wrangler Rubicon">
-          <div class="lib-car-icon">
-            <svg viewBox="0 0 80 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <ellipse cx="40" cy="25" rx="36" ry="6" fill="#f0f0f0" opacity="0.2"/>
-              <rect x="10" y="8" width="60" height="16" rx="1" fill="#e8e8e8"/>
-              <rect x="14" y="5" width="52" height="14" rx="1" fill="#f5f5f5"/>
-              <rect x="16" y="7" width="22" height="9" rx="1" fill="#1a3040" opacity="0.7"/>
-              <rect x="42" y="7" width="22" height="9" rx="1" fill="#1a3040" opacity="0.7"/>
-              <rect x="10" y="22" width="60" height="4" rx="1" fill="#d0d0d0"/>
-              <circle cx="20" cy="26" r="5" fill="#111" stroke="#555" stroke-width="1.5"/>
-              <circle cx="20" cy="26" r="2.5" fill="#2a2a2a"/>
-              <circle cx="60" cy="26" r="5" fill="#111" stroke="#555" stroke-width="1.5"/>
-              <circle cx="60" cy="26" r="2.5" fill="#2a2a2a"/>
-              <rect x="64" y="14" width="8" height="5" rx="1" fill="#f5f5f5" opacity="0.9"/>
-              <rect x="6" y="14" width="6" height="5" rx="1" fill="#f5f5f5" opacity="0.7"/>
-            </svg>
+        <div class="lib-car" data-key="jeep">
+          <div class="lib-car-img">
+            <img src="car-jeep.png" alt="Jeep Wrangler Rubicon" />
           </div>
           <span class="lib-car-name">Jeep Rubicon</span>
         </div>
@@ -99,39 +60,9 @@
 
     <!-- Board: garage image background -->
     <main id="board">
-      <!-- Car cards injected here by JS -->
+      <!-- Car images injected by JS -->
     </main>
 
-  </div>
-
-  <!-- Edit Modal -->
-  <div id="modal-overlay" class="hidden">
-    <div id="modal">
-      <button id="modal-close" class="modal-close-btn">&times;</button>
-      <h2 class="modal-title">Edit Car Details</h2>
-      <div class="modal-car-preview" id="modal-car-icon"></div>
-
-      <div class="form-group">
-        <label>Make &amp; Model</label>
-        <input type="text" id="field-make-model" placeholder="e.g. BMW Z4 35is" />
-      </div>
-      <div class="form-group">
-        <label>Owner Name</label>
-        <input type="text" id="field-owner" placeholder="e.g. John Doe" />
-      </div>
-      <div class="form-group">
-        <label>Parking Spot</label>
-        <input type="text" id="field-spot" placeholder="e.g. A1" maxlength="4" />
-      </div>
-      <div class="form-group">
-        <label>Notes</label>
-        <textarea id="field-notes" rows="3" placeholder="e.g. Track day prep, tires to swap..."></textarea>
-      </div>
-      <div class="modal-actions">
-        <button id="modal-delete" class="btn btn-danger">Remove Car</button>
-        <button id="modal-save" class="btn btn-primary">Save</button>
-      </div>
-    </div>
   </div>
 
   <script src="app.js"></script>
