@@ -5,34 +5,29 @@ let visible = new Set();
 
 const board = document.getElementById('board');
 
-// ── Background images: empty garage vs full garage ──
-// We composite cars by layering full-garage image regions as absolutely
-// positioned divs that show only the car's area via clip-path.
-// This avoids cutout artifacts entirely.
-
-const CAR_CLIPS = {
+// Car PNG crops + their exact position in the garage image (as % of image size)
+// These match the crop coordinates used when creating the PNG files.
+const CARS = {
   bmw: {
-    // Position & size as % of board — matches where BMW sits in garage.jpg
-    left:   '0%',
-    top:    '28%',
-    width:  '38%',
-    height: '72%',
-    // clip-path inset removes the empty sides of the full image region
-    clipPath: 'inset(0 0 0 0)',
+    img:    'car-bmw.png',
+    // crop was: left=0, top=300, right=600, bottom=1024 from 1535x1024
+    leftPct: 0 / 1535,
+    topPct:  300 / 1024,
+    widthPct: 600 / 1535,
   },
   porsche: {
-    left:   '23%',
-    top:    '22%',
-    width:  '45%',
-    height: '78%',
-    clipPath: 'inset(0 0 0 0)',
+    img:    'car-porsche.png',
+    // crop: left=340, top=240, right=1020, bottom=1024
+    leftPct: 340 / 1535,
+    topPct:  240 / 1024,
+    widthPct: 680 / 1535,
   },
   jeep: {
-    left:   '58%',
-    top:    '18%',
-    width:  '42%',
-    height: '82%',
-    clipPath: 'inset(0 0 0 0)',
+    img:    'car-jeep.png',
+    // crop: left=870, top=200, right=1535, bottom=1024
+    leftPct: 870 / 1535,
+    topPct:  200 / 1024,
+    widthPct: 665 / 1535,
   },
 };
 
@@ -48,66 +43,31 @@ function saveState() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify([...visible]));
 }
 
-// Each car layer is a div that shows the full-garage image
-// at the same size/position as the board, cropped to the car's area.
 function renderBoard() {
   const bw = board.offsetWidth;
   const bh = board.offsetHeight;
 
-  ['bmw', 'porsche', 'jeep'].forEach(key => {
-    const existing = document.getElementById('car-layer-' + key);
-    const c = CAR_CLIPS[key];
+  Object.entries(CARS).forEach(([key, car]) => {
+    const existing = document.getElementById('car-img-' + key);
 
     if (visible.has(key)) {
       if (existing) return;
-
-      const layer = document.createElement('div');
-      layer.id = 'car-layer-' + key;
-      layer.className = 'car-layer';
-
-      // The inner div shows the full garage.jpg, offset to align with board bg
-      layer.style.cssText = `
+      const img = document.createElement('img');
+      img.id        = 'car-img-' + key;
+      img.src       = car.img;
+      img.draggable = false;
+      img.style.cssText = `
         position: absolute;
-        left: ${c.left};
-        top: ${c.top};
-        width: ${c.width};
-        height: ${c.height};
-        overflow: hidden;
+        left:   ${Math.round(car.leftPct  * bw)}px;
+        top:    ${Math.round(car.topPct   * bh)}px;
+        width:  ${Math.round(car.widthPct * bw)}px;
+        height: auto;
         opacity: 0;
         transition: opacity 0.4s ease;
         pointer-events: none;
       `;
-
-      // Inner: full-size garage image positioned to align perfectly
-      const inner = document.createElement('div');
-      inner.style.cssText = `
-        position: absolute;
-        background-image: url('garage.jpg');
-        background-size: cover;
-        background-position: center top;
-        top: 0; left: 0;
-        width: 100%;
-        height: 100%;
-      `;
-
-      // We need to "undo" the clip offset so the bg aligns with board
-      // Use a pseudo-full-size container trick
-      const fullW = bw;
-      const fullH = bh;
-      const leftPx  = parseFloat(c.left)  / 100 * fullW;
-      const topPx   = parseFloat(c.top)   / 100 * fullH;
-      const wPx     = parseFloat(c.width)  / 100 * fullW;
-      const hPx     = parseFloat(c.height) / 100 * fullH;
-
-      inner.style.width      = (fullW / wPx * 100) + '%';
-      inner.style.height     = (fullH / hPx * 100) + '%';
-      inner.style.left       = -(leftPx / wPx * 100) + '%';
-      inner.style.top        = -(topPx  / hPx * 100) + '%';
-
-      layer.appendChild(inner);
-      board.appendChild(layer);
-      requestAnimationFrame(() => { layer.style.opacity = '1'; });
-
+      board.appendChild(img);
+      requestAnimationFrame(() => { img.style.opacity = '1'; });
     } else {
       if (!existing) return;
       existing.style.opacity = '0';

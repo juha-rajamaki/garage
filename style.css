@@ -292,9 +292,6 @@ html, body {
 }
 
 /* ── Cars on board ── */
-.car-on-board {
-  position: absolute;
-  bottom: 0;
-  pointer-events: none;
+#board img {
   user-select: none;
 }
