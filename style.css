@@ -233,7 +233,7 @@ html, body {
   flex: 1;
   position: relative;
   overflow: hidden;
-  background-image: url('garage.jpg');
+  background-image: url('garage.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
