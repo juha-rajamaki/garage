@@ -1,51 +1,45 @@
 'use strict';
 
-// ── Car definitions — position on board as % of board size ──
-const CARS = [
-  {
-    key:   'bmw',
-    make:  'BMW',
-    model: 'Z4 35is',
-    img:   'car-bmw.png',
-    // left third of the board, bottom-aligned
-    xPct:  0.01,
-    yPct:  0.18,
-    wPct:  0.34,
-  },
-  {
-    key:   'porsche',
-    make:  'Porsche',
-    model: 'Panamera E-Hybrid',
-    img:   'car-porsche.png',
-    xPct:  0.28,
-    yPct:  0.10,
-    wPct:  0.38,
-  },
-  {
-    key:   'jeep',
-    make:  'Jeep',
-    model: 'Wrangler Rubicon',
-    img:   'car-jeep.png',
-    xPct:  0.60,
-    yPct:  0.05,
-    wPct:  0.40,
-  },
-];
-
-// ── State: which cars are visible ──
-const STORAGE_KEY = 'garage-planner-v3';
+const STORAGE_KEY = 'garage-planner-v4';
 let visible = new Set();
 
 const board = document.getElementById('board');
 
+// ── Background images: empty garage vs full garage ──
+// We composite cars by layering full-garage image regions as absolutely
+// positioned divs that show only the car's area via clip-path.
+// This avoids cutout artifacts entirely.
+
+const CAR_CLIPS = {
+  bmw: {
+    // Position & size as % of board — matches where BMW sits in garage.jpg
+    left:   '0%',
+    top:    '28%',
+    width:  '38%',
+    height: '72%',
+    // clip-path inset removes the empty sides of the full image region
+    clipPath: 'inset(0 0 0 0)',
+  },
+  porsche: {
+    left:   '23%',
+    top:    '22%',
+    width:  '45%',
+    height: '78%',
+    clipPath: 'inset(0 0 0 0)',
+  },
+  jeep: {
+    left:   '58%',
+    top:    '18%',
+    width:  '42%',
+    height: '82%',
+    clipPath: 'inset(0 0 0 0)',
+  },
+};
+
 function loadState() {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      const arr = JSON.parse(saved);
-      visible = new Set(arr);
-      return;
-    }
+    if (saved) { visible = new Set(JSON.parse(saved)); return; }
   } catch (_) {}
   visible = new Set();
 }
@@ -54,37 +48,83 @@ function saveState() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify([...visible]));
 }
 
-// ── Render: place/remove car images on board ──
+// Each car layer is a div that shows the full-garage image
+// at the same size/position as the board, cropped to the car's area.
 function renderBoard() {
   const bw = board.offsetWidth;
   const bh = board.offsetHeight;
 
-  CARS.forEach(car => {
-    const existing = document.getElementById('car-img-' + car.key);
-    if (visible.has(car.key)) {
-      if (existing) return; // already shown
-      const img = document.createElement('img');
-      img.id  = 'car-img-' + car.key;
-      img.src = car.img;
-      img.alt = `${car.make} ${car.model}`;
-      img.draggable = false;
-      img.className = 'car-on-board';
-      img.style.left   = Math.round(car.xPct * bw) + 'px';
-      img.style.top    = Math.round(car.yPct * bh) + 'px';
-      img.style.width  = Math.round(car.wPct * bw) + 'px';
-      img.style.height = 'auto';
-      // fade in
-      img.style.opacity = '0';
-      img.style.transition = 'opacity 0.35s ease';
-      board.appendChild(img);
-      requestAnimationFrame(() => { img.style.opacity = '1'; });
+  ['bmw', 'porsche', 'jeep'].forEach(key => {
+    const existing = document.getElementById('car-layer-' + key);
+    const c = CAR_CLIPS[key];
+
+    if (visible.has(key)) {
+      if (existing) return;
+
+      const layer = document.createElement('div');
+      layer.id = 'car-layer-' + key;
+      layer.className = 'car-layer';
+
+      // The inner div shows the full garage.jpg, offset to align with board bg
+      layer.style.cssText = `
+        position: absolute;
+        left: ${c.left};
+        top: ${c.top};
+        width: ${c.width};
+        height: ${c.height};
+        overflow: hidden;
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        pointer-events: none;
+      `;
+
+      // Inner: full-size garage image positioned to align perfectly
+      const inner = document.createElement('div');
+      inner.style.cssText = `
+        position: absolute;
+        background-image: url('garage.jpg');
+        background-size: cover;
+        background-position: center top;
+        top: 0; left: 0;
+        width: 100%;
+        height: 100%;
+      `;
+
+      // We need to "undo" the clip offset so the bg aligns with board
+      // Use a pseudo-full-size container trick
+      const fullW = bw;
+      const fullH = bh;
+      const leftPx  = parseFloat(c.left)  / 100 * fullW;
+      const topPx   = parseFloat(c.top)   / 100 * fullH;
+      const wPx     = parseFloat(c.width)  / 100 * fullW;
+      const hPx     = parseFloat(c.height) / 100 * fullH;
+
+      inner.style.width      = (fullW / wPx * 100) + '%';
+      inner.style.height     = (fullH / hPx * 100) + '%';
+      inner.style.left       = -(leftPx / wPx * 100) + '%';
+      inner.style.top        = -(topPx  / hPx * 100) + '%';
+
+      layer.appendChild(inner);
+      board.appendChild(layer);
+      requestAnimationFrame(() => { layer.style.opacity = '1'; });
+
     } else {
       if (!existing) return;
       existing.style.opacity = '0';
-      setTimeout(() => existing.remove(), 360);
+      setTimeout(() => existing.remove(), 420);
     }
   });
 }
+
+// ── Resize: rebuild layers ──
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    document.querySelectorAll('.car-layer').forEach(el => el.remove());
+    renderBoard();
+  }, 150);
+});
 
 // ── 3D Viewer Modal ──
 const viewerOverlay = document.getElementById('viewer-overlay');
@@ -123,22 +163,19 @@ function bind3DViewer() {
 function bindSidebar() {
   document.querySelectorAll('.lib-car').forEach(el => {
     const key = el.dataset.key;
-    el.addEventListener('click', e => {
-      // If this car has a 3D model and is not yet on the board, open viewer
+    el.addEventListener('click', () => {
       if (key === 'porsche' && !visible.has(key)) {
         open3DViewer(key);
         return;
       }
-      // Otherwise toggle
       if (visible.has(key)) {
         visible.delete(key);
-        el.classList.remove('active');
       } else {
         visible.add(key);
-        el.classList.add('active');
       }
       saveState();
       renderBoard();
+      updateSidebarStates();
     });
   });
 }
@@ -155,21 +192,10 @@ function bindToolbar() {
     if (!confirm('Tyhjennetäänkö talli?')) return;
     visible.clear();
     saveState();
-    renderBoard();
+    document.querySelectorAll('.car-layer').forEach(el => el.remove());
     updateSidebarStates();
   });
 }
-
-// ── Resize: reposition cars if window resizes ──
-let resizeTimer;
-window.addEventListener('resize', () => {
-  clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(() => {
-    // Remove all and re-render at new positions
-    document.querySelectorAll('.car-on-board').forEach(el => el.remove());
-    renderBoard();
-  }, 150);
-});
 
 // ── Init ──
 function init() {
