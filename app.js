@@ -171,15 +171,24 @@ function getSvg(make, model) {
   return CAR_SVGS[`${make}|${model}`] || CAR_SVGS['BMW|M5'];
 }
 
-// ── Default pre-placed cars ──
-const DEFAULT_CARS = [
-  { id: 'car-bmw',     make: 'BMW',    model: 'Z4 35is',          owner: '',  notes: '', spot: 'A1', xPct: 0.12, yPct: 0.52 },
-  { id: 'car-porsche', make: 'Porsche', model: 'Panamera E-Hybrid', owner: '', notes: '', spot: 'A2', xPct: 0.38, yPct: 0.52 },
-  { id: 'car-jeep',   make: 'Jeep',   model: 'Wrangler Rubicon',  owner: '',  notes: '', spot: 'A3', xPct: 0.66, yPct: 0.52 },
+// ── Library car definitions (same order as sidebar HTML) ──
+const LIBRARY_CARS = [
+  { make: 'Ferrari',     model: '488 GTB' },
+  { make: 'Lamborghini', model: 'Huracán' },
+  { make: 'McLaren',     model: '720S' },
+  { make: 'BMW',         model: 'M5' },
+  { make: 'Mercedes',    model: 'E63 AMG' },
+  { make: 'Audi',        model: 'RS7' },
+  { make: 'Range Rover', model: 'Sport SVR' },
+  { make: 'Cadillac',    model: 'Escalade' },
+  { make: 'Porsche',     model: '911 Cabriolet' },
+  { make: 'Tesla',       model: 'Model S Plaid' },
+  { make: 'Rimac',       model: 'Nevera' },
+  { make: 'Ford',        model: 'Mustang GT500' },
 ];
 
 // ── State ──
-let cars = [];
+let cars = [];      // cars currently visible on the board
 let nextId = 1;
 let editingId = null;
 
@@ -192,6 +201,7 @@ function init() {
   loadState();
   renderAll();
   bindSidebar();
+  updateSidebarStates();
   bindToolbar();
   bindModal();
 }
@@ -206,20 +216,9 @@ function loadState() {
       return;
     }
   } catch (_) {}
-  // First load: place defaults
-  const bw = board.offsetWidth || window.innerWidth - 240;
-  const bh = board.offsetHeight || window.innerHeight - 56;
-  cars = DEFAULT_CARS.map(c => ({
-    id: c.id,
-    make: c.make,
-    model: c.model,
-    owner: c.owner,
-    notes: c.notes,
-    spot: c.spot,
-    x: Math.round(c.xPct * bw),
-    y: Math.round(c.yPct * bh),
-  }));
-  nextId = 10;
+  // First load: empty board
+  cars = [];
+  nextId = 1;
 }
 
 function saveState() {
@@ -248,10 +247,12 @@ function renderCard(car) {
       <button class="card-delete" title="Remove">&times;</button>
     </div>
     <div class="card-car-icon">${getSvg(car.make, car.model)}</div>
-    <div class="card-make-model">${escHtml(car.make)} ${escHtml(car.model)}</div>
-    <div class="card-owner">${escHtml(car.owner)}</div>
-    <div class="card-notes">${escHtml(car.notes)}</div>
-    <div class="card-edit-hint">double-click to edit</div>
+    <div class="card-details">
+      <div class="card-make-model">${escHtml(car.make)} ${escHtml(car.model)}</div>
+      <div class="card-owner">${escHtml(car.owner)}</div>
+      <div class="card-notes">${escHtml(car.notes)}</div>
+      <div class="card-edit-hint">double-click to edit</div>
+    </div>
   `;
 
   el.querySelector('.card-delete').addEventListener('click', e => {
@@ -375,32 +376,56 @@ function bindSidebar() {
     el.addEventListener('click', () => {
       const make  = el.dataset.make;
       const model = el.dataset.model;
-      addCarFromLibrary(make, model);
+      toggleCar(make, model, el);
     });
   });
 }
 
-function addCarFromLibrary(make, model) {
-  const bw = board.offsetWidth;
-  const bh = board.offsetHeight;
-  const x = Math.round(bw / 2 - 80 + (Math.random() - 0.5) * 60);
-  const y = Math.round(bh / 2 - 60 + (Math.random() - 0.5) * 40);
+function toggleCar(make, model, libEl) {
+  const key = `${make}|${model}`;
+  const existing = cars.find(c => `${c.make}|${c.model}` === key);
 
-  const car = {
-    id:    'car-' + (nextId++),
-    make,
-    model,
-    owner: '',
-    notes: '',
-    spot:  'P' + nextId,
-    x:     Math.max(0, Math.min(bw - 160, x)),
-    y:     Math.max(0, Math.min(bh - 120, y)),
-  };
+  if (existing) {
+    // Already on board — remove it
+    deleteCar(existing.id);
+    libEl.classList.remove('active');
+    libEl.classList.add('hidden-car');
+    showToast(`${make} ${model} removed`);
+  } else {
+    // Not on board — add it
+    const bw = board.offsetWidth;
+    const bh = board.offsetHeight;
+    const x = Math.round(bw / 2 - 45 + (Math.random() - 0.5) * 80);
+    const y = Math.round(bh / 2 - 40 + (Math.random() - 0.5) * 60);
 
-  cars.push(car);
-  renderCard(car);
-  saveState();
-  showToast(`${make} ${model} added to garage`);
+    const car = {
+      id:    'car-' + (nextId++),
+      make,
+      model,
+      owner: '',
+      notes: '',
+      spot:  String.fromCharCode(64 + Math.ceil(cars.length / 3)) + ((cars.length % 3) + 1),
+      x:     Math.max(0, Math.min(bw - 160, x)),
+      y:     Math.max(0, Math.min(bh - 120, y)),
+    };
+
+    cars.push(car);
+    renderCard(car);
+    saveState();
+    libEl.classList.add('active');
+    libEl.classList.remove('hidden-car');
+    showToast(`${make} ${model} added`);
+  }
+}
+
+// Sync sidebar button states to current board contents
+function updateSidebarStates() {
+  document.querySelectorAll('.lib-car').forEach(el => {
+    const key = `${el.dataset.make}|${el.dataset.model}`;
+    const onBoard = cars.some(c => `${c.make}|${c.model}` === key);
+    el.classList.toggle('active', onBoard);
+    el.classList.toggle('hidden-car', !onBoard);
+  });
 }
 
 // ── Delete ──
@@ -414,7 +439,7 @@ function deleteCar(id) {
     setTimeout(() => el.remove(), 220);
   }
   saveState();
-  showToast('Car removed');
+  updateSidebarStates();
 }
 
 // ── Toolbar ──
@@ -425,7 +450,8 @@ function bindToolbar() {
     cars = [];
     loadState();
     renderAll();
-    showToast('Board reset to defaults');
+    updateSidebarStates();
+    showToast('Board cleared');
   });
 
   document.getElementById('btn-save').addEventListener('click', () => {
