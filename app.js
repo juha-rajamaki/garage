@@ -207,8 +207,9 @@ function init() {
 }
 
 function loadState() {
+  localStorage.removeItem('garage-planner-v1'); // clean up old key
   try {
-    const saved = localStorage.getItem('garage-planner-v1');
+    const saved = localStorage.getItem('garage-planner-v2');
     if (saved) {
       const parsed = JSON.parse(saved);
       cars = parsed.cars || [];
@@ -222,7 +223,7 @@ function loadState() {
 }
 
 function saveState() {
-  localStorage.setItem('garage-planner-v1', JSON.stringify({ cars, nextId }));
+  localStorage.setItem('garage-planner-v2', JSON.stringify({ cars, nextId }));
 }
 
 // ── Rendering ──
@@ -446,7 +447,7 @@ function deleteCar(id) {
 function bindToolbar() {
   document.getElementById('btn-reset').addEventListener('click', () => {
     if (!confirm('Reset board to defaults? This will remove all custom cars and positions.')) return;
-    localStorage.removeItem('garage-planner-v1');
+    localStorage.removeItem('garage-planner-v2');
     cars = [];
     loadState();
     renderAll();
