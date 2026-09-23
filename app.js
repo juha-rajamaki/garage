@@ -1,0 +1,465 @@
+'use strict';
+
+// ── SVG templates for each library car (keyed by "make|model") ──
+const CAR_SVGS = {
+  'BMW|Z4 35is': `<svg viewBox="0 0 80 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="40" cy="22" rx="36" ry="6" fill="#1a1a1a" opacity="0.4"/>
+    <path d="M8 20 Q12 10 22 8 Q30 5 40 5 Q52 5 62 9 Q70 12 72 20 Z" fill="#1a1a1a"/>
+    <path d="M20 20 Q22 12 30 10 Q38 8 48 10 Q56 12 58 20" fill="#2c2c2c"/>
+    <rect x="14" y="18" width="52" height="5" rx="2" fill="#111"/>
+    <circle cx="20" cy="23" r="4" fill="#0a0a0a" stroke="#555" stroke-width="1"/>
+    <circle cx="20" cy="23" r="2" fill="#222"/>
+    <circle cx="60" cy="23" r="4" fill="#0a0a0a" stroke="#555" stroke-width="1"/>
+    <circle cx="60" cy="23" r="2" fill="#222"/>
+    <rect x="62" y="14" width="8" height="4" rx="1" fill="#3a90ff" opacity="0.9"/>
+    <rect x="8" y="14" width="6" height="4" rx="1" fill="#ff4444" opacity="0.7"/>
+  </svg>`,
+  'Porsche|Panamera E-Hybrid': `<svg viewBox="0 0 80 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="40" cy="22" rx="36" ry="6" fill="#4a4a4a" opacity="0.4"/>
+    <path d="M8 20 Q10 12 20 9 Q30 6 40 6 Q52 6 62 10 Q70 13 72 20 Z" fill="#5a5a5a"/>
+    <path d="M18 20 Q20 12 30 10 Q40 8 50 10 Q58 12 60 20" fill="#6e6e6e"/>
+    <rect x="12" y="18" width="56" height="5" rx="2" fill="#3a3a3a"/>
+    <circle cx="20" cy="23" r="4" fill="#0a0a0a" stroke="#666" stroke-width="1"/>
+    <circle cx="20" cy="23" r="2" fill="#222"/>
+    <circle cx="60" cy="23" r="4" fill="#0a0a0a" stroke="#666" stroke-width="1"/>
+    <circle cx="60" cy="23" r="2" fill="#222"/>
+    <rect x="62" y="14" width="8" height="4" rx="1" fill="#ffe082" opacity="0.9"/>
+    <rect x="8" y="14" width="6" height="4" rx="1" fill="#ffe082" opacity="0.7"/>
+  </svg>`,
+  'Jeep|Wrangler Rubicon': `<svg viewBox="0 0 80 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="40" cy="25" rx="36" ry="6" fill="#f0f0f0" opacity="0.2"/>
+    <rect x="10" y="8" width="60" height="16" rx="1" fill="#e8e8e8"/>
+    <rect x="14" y="5" width="52" height="14" rx="1" fill="#f5f5f5"/>
+    <rect x="16" y="7" width="22" height="9" rx="1" fill="#1a3040" opacity="0.7"/>
+    <rect x="42" y="7" width="22" height="9" rx="1" fill="#1a3040" opacity="0.7"/>
+    <rect x="10" y="22" width="60" height="4" rx="1" fill="#d0d0d0"/>
+    <circle cx="20" cy="26" r="5" fill="#111" stroke="#555" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="2.5" fill="#2a2a2a"/>
+    <circle cx="60" cy="26" r="5" fill="#111" stroke="#555" stroke-width="1.5"/>
+    <circle cx="60" cy="26" r="2.5" fill="#2a2a2a"/>
+    <rect x="64" y="14" width="8" height="5" rx="1" fill="#f5f5f5" opacity="0.9"/>
+    <rect x="6" y="14" width="6" height="5" rx="1" fill="#f5f5f5" opacity="0.7"/>
+  </svg>`,
+  'Ferrari|488 GTB': `<svg viewBox="0 0 80 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="40" cy="22" rx="36" ry="6" fill="#c0392b" opacity="0.3"/>
+    <path d="M8 20 Q12 10 22 8 Q30 5 40 5 Q52 5 62 9 Q70 12 72 20 Z" fill="#c0392b"/>
+    <path d="M20 20 Q22 12 30 10 Q38 8 48 10 Q56 12 58 20" fill="#e74c3c"/>
+    <rect x="14" y="18" width="52" height="5" rx="2" fill="#922b21"/>
+    <circle cx="20" cy="23" r="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
+    <circle cx="20" cy="23" r="2" fill="#333"/>
+    <circle cx="60" cy="23" r="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
+    <circle cx="60" cy="23" r="2" fill="#333"/>
+    <rect x="62" y="14" width="8" height="4" rx="1" fill="#f39c12" opacity="0.8"/>
+  </svg>`,
+  'Lamborghini|Huracán': `<svg viewBox="0 0 80 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="40" cy="22" rx="36" ry="6" fill="#f39c12" opacity="0.3"/>
+    <path d="M6 20 L16 8 L28 5 L52 5 L66 10 L74 20 Z" fill="#f39c12"/>
+    <path d="M18 20 L24 10 L36 8 L50 9 L60 14 L62 20" fill="#f1c40f"/>
+    <rect x="12" y="18" width="56" height="5" rx="1" fill="#d68910"/>
+    <circle cx="20" cy="23" r="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
+    <circle cx="20" cy="23" r="2" fill="#333"/>
+    <circle cx="60" cy="23" r="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
+    <circle cx="60" cy="23" r="2" fill="#333"/>
+  </svg>`,
+  'McLaren|720S': `<svg viewBox="0 0 80 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="40" cy="22" rx="36" ry="6" fill="#e67e22" opacity="0.3"/>
+    <path d="M10 20 Q14 9 26 7 Q38 4 50 6 Q62 8 70 20 Z" fill="#e67e22"/>
+    <path d="M22 20 Q26 11 36 9 Q44 7 54 10 Q60 13 62 20" fill="#f39c12"/>
+    <rect x="14" y="18" width="52" height="5" rx="2" fill="#ca6f1e"/>
+    <circle cx="20" cy="23" r="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
+    <circle cx="20" cy="23" r="2" fill="#333"/>
+    <circle cx="60" cy="23" r="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
+    <circle cx="60" cy="23" r="2" fill="#333"/>
+  </svg>`,
+  'BMW|M5': `<svg viewBox="0 0 80 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="40" cy="22" rx="36" ry="6" fill="#2980b9" opacity="0.3"/>
+    <path d="M8 20 Q10 12 20 9 Q30 6 40 6 Q52 6 62 10 Q70 13 72 20 Z" fill="#2980b9"/>
+    <path d="M18 20 Q20 12 30 10 Q40 8 50 10 Q58 12 60 20" fill="#3498db"/>
+    <rect x="12" y="18" width="56" height="5" rx="2" fill="#1a6f9f"/>
+    <circle cx="20" cy="23" r="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
+    <circle cx="20" cy="23" r="2" fill="#333"/>
+    <circle cx="60" cy="23" r="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
+    <circle cx="60" cy="23" r="2" fill="#333"/>
+  </svg>`,
+  'Mercedes|E63 AMG': `<svg viewBox="0 0 80 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="40" cy="22" rx="36" ry="6" fill="#7f8c8d" opacity="0.3"/>
+    <path d="M8 20 Q10 12 22 9 Q32 6 42 6 Q54 6 64 10 Q70 13 72 20 Z" fill="#95a5a6"/>
+    <path d="M18 20 Q22 12 32 10 Q42 8 52 10 Q60 13 62 20" fill="#bdc3c7"/>
+    <rect x="12" y="18" width="56" height="5" rx="2" fill="#7f8c8d"/>
+    <circle cx="20" cy="23" r="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
+    <circle cx="20" cy="23" r="2" fill="#333"/>
+    <circle cx="60" cy="23" r="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
+    <circle cx="60" cy="23" r="2" fill="#333"/>
+  </svg>`,
+  'Audi|RS7': `<svg viewBox="0 0 80 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="40" cy="22" rx="36" ry="6" fill="#c0392b" opacity="0.25"/>
+    <path d="M8 20 Q10 11 22 8 Q34 5 44 6 Q56 6 65 11 Q71 14 72 20 Z" fill="#7f8c8d"/>
+    <path d="M18 20 Q22 11 32 9 Q42 7 52 9 Q60 12 62 20" fill="#95a5a6"/>
+    <rect x="12" y="18" width="56" height="5" rx="2" fill="#616a6b"/>
+    <circle cx="20" cy="23" r="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
+    <circle cx="20" cy="23" r="2" fill="#333"/>
+    <circle cx="60" cy="23" r="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
+    <circle cx="60" cy="23" r="2" fill="#333"/>
+  </svg>`,
+  'Range Rover|Sport SVR': `<svg viewBox="0 0 80 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="40" cy="25" rx="36" ry="6" fill="#27ae60" opacity="0.3"/>
+    <rect x="10" y="8" width="60" height="16" rx="2" fill="#27ae60"/>
+    <rect x="14" y="5" width="52" height="14" rx="2" fill="#2ecc71"/>
+    <rect x="16" y="7" width="22" height="9" rx="1" fill="#1a3a2a" opacity="0.7"/>
+    <rect x="42" y="7" width="22" height="9" rx="1" fill="#1a3a2a" opacity="0.7"/>
+    <rect x="10" y="22" width="60" height="4" rx="1" fill="#1e8449"/>
+    <circle cx="20" cy="26" r="5" fill="#1a1a1a" stroke="#555" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="2.5" fill="#333"/>
+    <circle cx="60" cy="26" r="5" fill="#1a1a1a" stroke="#555" stroke-width="1.5"/>
+    <circle cx="60" cy="26" r="2.5" fill="#333"/>
+  </svg>`,
+  'Cadillac|Escalade': `<svg viewBox="0 0 80 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="40" cy="25" rx="36" ry="6" fill="#1a1a2e" opacity="0.4"/>
+    <rect x="8" y="8" width="64" height="16" rx="1" fill="#2c3e50"/>
+    <rect x="12" y="5" width="56" height="14" rx="1" fill="#34495e"/>
+    <rect x="14" y="7" width="24" height="9" rx="1" fill="#1a2634" opacity="0.8"/>
+    <rect x="42" y="7" width="24" height="9" rx="1" fill="#1a2634" opacity="0.8"/>
+    <rect x="8" y="22" width="64" height="4" rx="1" fill="#1c2833"/>
+    <circle cx="20" cy="26" r="5" fill="#1a1a1a" stroke="#555" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="2.5" fill="#333"/>
+    <circle cx="60" cy="26" r="5" fill="#1a1a1a" stroke="#555" stroke-width="1.5"/>
+    <circle cx="60" cy="26" r="2.5" fill="#333"/>
+  </svg>`,
+  'Porsche|911 Cabriolet': `<svg viewBox="0 0 80 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="40" cy="22" rx="36" ry="6" fill="#8e44ad" opacity="0.3"/>
+    <path d="M8 20 Q10 14 20 12 Q30 9 40 9 Q52 10 62 13 Q70 16 72 20 Z" fill="#8e44ad"/>
+    <path d="M22 20 Q25 13 34 11 Q42 9 52 12 Q58 14 60 20" fill="#9b59b6" opacity="0.7"/>
+    <rect x="12" y="18" width="56" height="5" rx="2" fill="#6c3483"/>
+    <circle cx="20" cy="23" r="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
+    <circle cx="20" cy="23" r="2" fill="#333"/>
+    <circle cx="60" cy="23" r="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
+    <circle cx="60" cy="23" r="2" fill="#333"/>
+  </svg>`,
+  'Tesla|Model S Plaid': `<svg viewBox="0 0 80 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="40" cy="22" rx="36" ry="6" fill="#1abc9c" opacity="0.3"/>
+    <path d="M8 20 Q10 12 22 9 Q32 6 42 6 Q54 6 63 10 Q70 13 72 20 Z" fill="#1abc9c"/>
+    <path d="M18 20 Q22 12 32 10 Q42 8 52 10 Q60 12 62 20" fill="#16a085"/>
+    <rect x="12" y="18" width="56" height="5" rx="2" fill="#148f77"/>
+    <circle cx="20" cy="23" r="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
+    <circle cx="20" cy="23" r="2" fill="#333"/>
+    <circle cx="60" cy="23" r="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
+    <circle cx="60" cy="23" r="2" fill="#333"/>
+  </svg>`,
+  'Rimac|Nevera': `<svg viewBox="0 0 80 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="40" cy="22" rx="36" ry="6" fill="#8e44ad" opacity="0.25"/>
+    <path d="M8 20 Q12 9 24 7 Q36 4 46 5 Q60 6 68 14 Q72 17 72 20 Z" fill="#6c3483"/>
+    <path d="M20 20 Q24 11 34 9 Q44 7 54 9 Q62 13 64 20" fill="#8e44ad"/>
+    <rect x="12" y="18" width="56" height="5" rx="2" fill="#5b2c6f"/>
+    <circle cx="20" cy="23" r="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
+    <circle cx="20" cy="23" r="2" fill="#333"/>
+    <circle cx="60" cy="23" r="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
+    <circle cx="60" cy="23" r="2" fill="#333"/>
+  </svg>`,
+  'Ford|Mustang GT500': `<svg viewBox="0 0 80 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="40" cy="22" rx="36" ry="6" fill="#c0392b" opacity="0.3"/>
+    <path d="M6 20 Q8 12 18 9 Q28 6 40 6 Q52 6 62 9 Q70 12 74 20 Z" fill="#c0392b"/>
+    <path d="M16 20 Q18 11 28 9 Q38 7 50 9 Q58 12 60 20" fill="#e74c3c"/>
+    <rect x="10" y="18" width="60" height="5" rx="2" fill="#922b21"/>
+    <circle cx="18" cy="23" r="4.5" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
+    <circle cx="18" cy="23" r="2.5" fill="#333"/>
+    <circle cx="62" cy="23" r="4.5" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
+    <circle cx="62" cy="23" r="2.5" fill="#333"/>
+  </svg>`,
+};
+
+function getSvg(make, model) {
+  return CAR_SVGS[`${make}|${model}`] || CAR_SVGS['BMW|M5'];
+}
+
+// ── Default pre-placed cars ──
+const DEFAULT_CARS = [
+  { id: 'car-bmw',     make: 'BMW',    model: 'Z4 35is',          owner: '',  notes: '', spot: 'A1', xPct: 0.12, yPct: 0.52 },
+  { id: 'car-porsche', make: 'Porsche', model: 'Panamera E-Hybrid', owner: '', notes: '', spot: 'A2', xPct: 0.38, yPct: 0.52 },
+  { id: 'car-jeep',   make: 'Jeep',   model: 'Wrangler Rubicon',  owner: '',  notes: '', spot: 'A3', xPct: 0.66, yPct: 0.52 },
+];
+
+// ── State ──
+let cars = [];
+let nextId = 1;
+let editingId = null;
+
+const board = document.getElementById('board');
+const modalOverlay = document.getElementById('modal-overlay');
+const toast = createToast();
+
+// ── Init ──
+function init() {
+  loadState();
+  renderAll();
+  bindSidebar();
+  bindToolbar();
+  bindModal();
+}
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem('garage-planner-v1');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      cars = parsed.cars || [];
+      nextId = parsed.nextId || 1;
+      return;
+    }
+  } catch (_) {}
+  // First load: place defaults
+  const bw = board.offsetWidth || window.innerWidth - 240;
+  const bh = board.offsetHeight || window.innerHeight - 56;
+  cars = DEFAULT_CARS.map(c => ({
+    id: c.id,
+    make: c.make,
+    model: c.model,
+    owner: c.owner,
+    notes: c.notes,
+    spot: c.spot,
+    x: Math.round(c.xPct * bw),
+    y: Math.round(c.yPct * bh),
+  }));
+  nextId = 10;
+}
+
+function saveState() {
+  localStorage.setItem('garage-planner-v1', JSON.stringify({ cars, nextId }));
+}
+
+// ── Rendering ──
+function renderAll() {
+  board.querySelectorAll('.car-card').forEach(el => el.remove());
+  cars.forEach(c => renderCard(c));
+}
+
+function renderCard(car) {
+  const existing = document.getElementById(car.id);
+  if (existing) existing.remove();
+
+  const el = document.createElement('div');
+  el.className = 'car-card';
+  el.id = car.id;
+  el.style.left = car.x + 'px';
+  el.style.top  = car.y + 'px';
+
+  el.innerHTML = `
+    <div class="card-header">
+      <span class="spot-badge">${escHtml(car.spot || '—')}</span>
+      <button class="card-delete" title="Remove">&times;</button>
+    </div>
+    <div class="card-car-icon">${getSvg(car.make, car.model)}</div>
+    <div class="card-make-model">${escHtml(car.make)} ${escHtml(car.model)}</div>
+    <div class="card-owner">${escHtml(car.owner)}</div>
+    <div class="card-notes">${escHtml(car.notes)}</div>
+    <div class="card-edit-hint">double-click to edit</div>
+  `;
+
+  el.querySelector('.card-delete').addEventListener('click', e => {
+    e.stopPropagation();
+    deleteCar(car.id);
+  });
+
+  el.addEventListener('dblclick', e => {
+    e.stopPropagation();
+    openModal(car.id);
+  });
+
+  makeDraggable(el, car);
+  board.appendChild(el);
+}
+
+// ── Drag & drop ──
+function makeDraggable(el, car) {
+  let startX, startY, startLeft, startTop, dragging = false;
+
+  el.addEventListener('mousedown', e => {
+    if (e.target.classList.contains('card-delete')) return;
+    if (e.detail === 2) return; // let dblclick through
+    e.preventDefault();
+    dragging = true;
+    startX = e.clientX;
+    startY = e.clientY;
+    startLeft = car.x;
+    startTop  = car.y;
+    el.classList.add('dragging');
+
+    // bring to front
+    el.style.zIndex = 50;
+
+    function onMove(ev) {
+      if (!dragging) return;
+      const dx = ev.clientX - startX;
+      const dy = ev.clientY - startY;
+      const bw = board.offsetWidth;
+      const bh = board.offsetHeight;
+      car.x = Math.max(0, Math.min(bw - el.offsetWidth,  startLeft + dx));
+      car.y = Math.max(0, Math.min(bh - el.offsetHeight, startTop  + dy));
+      el.style.left = car.x + 'px';
+      el.style.top  = car.y + 'px';
+    }
+
+    function onUp() {
+      dragging = false;
+      el.classList.remove('dragging');
+      el.style.zIndex = '';
+      saveState();
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+    }
+
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+  });
+}
+
+// ── Modal ──
+function openModal(id) {
+  editingId = id;
+  const car = cars.find(c => c.id === id);
+  if (!car) return;
+
+  document.getElementById('field-make-model').value = `${car.make} ${car.model}`;
+  document.getElementById('field-owner').value  = car.owner;
+  document.getElementById('field-spot').value   = car.spot;
+  document.getElementById('field-notes').value  = car.notes;
+  document.getElementById('modal-car-icon').innerHTML = getSvg(car.make, car.model);
+
+  modalOverlay.classList.remove('hidden');
+  document.getElementById('field-owner').focus();
+}
+
+function closeModal() {
+  modalOverlay.classList.add('hidden');
+  editingId = null;
+}
+
+function saveModal() {
+  const car = cars.find(c => c.id === editingId);
+  if (!car) return;
+
+  const rawMakeModel = document.getElementById('field-make-model').value.trim();
+  const parts = rawMakeModel.split(' ');
+  car.make  = parts[0] || car.make;
+  car.model = parts.slice(1).join(' ') || car.model;
+  car.owner = document.getElementById('field-owner').value.trim();
+  car.spot  = document.getElementById('field-spot').value.trim().toUpperCase() || '—';
+  car.notes = document.getElementById('field-notes').value.trim();
+
+  renderCard(car);
+  saveState();
+  closeModal();
+  showToast('Car details saved');
+}
+
+function bindModal() {
+  document.getElementById('modal-close').addEventListener('click', closeModal);
+  document.getElementById('modal-save').addEventListener('click', saveModal);
+  document.getElementById('modal-delete').addEventListener('click', () => {
+    deleteCar(editingId);
+    closeModal();
+  });
+  modalOverlay.addEventListener('click', e => {
+    if (e.target === modalOverlay) closeModal();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal();
+    if (e.key === 'Enter' && !modalOverlay.classList.contains('hidden') && e.target.tagName !== 'TEXTAREA') {
+      saveModal();
+    }
+  });
+}
+
+// ── Sidebar ──
+function bindSidebar() {
+  document.querySelectorAll('.lib-car').forEach(el => {
+    el.addEventListener('click', () => {
+      const make  = el.dataset.make;
+      const model = el.dataset.model;
+      addCarFromLibrary(make, model);
+    });
+  });
+}
+
+function addCarFromLibrary(make, model) {
+  const bw = board.offsetWidth;
+  const bh = board.offsetHeight;
+  const x = Math.round(bw / 2 - 80 + (Math.random() - 0.5) * 60);
+  const y = Math.round(bh / 2 - 60 + (Math.random() - 0.5) * 40);
+
+  const car = {
+    id:    'car-' + (nextId++),
+    make,
+    model,
+    owner: '',
+    notes: '',
+    spot:  'P' + nextId,
+    x:     Math.max(0, Math.min(bw - 160, x)),
+    y:     Math.max(0, Math.min(bh - 120, y)),
+  };
+
+  cars.push(car);
+  renderCard(car);
+  saveState();
+  showToast(`${make} ${model} added to garage`);
+}
+
+// ── Delete ──
+function deleteCar(id) {
+  cars = cars.filter(c => c.id !== id);
+  const el = document.getElementById(id);
+  if (el) {
+    el.style.transition = 'opacity 0.2s, transform 0.2s';
+    el.style.opacity = '0';
+    el.style.transform = 'scale(0.85)';
+    setTimeout(() => el.remove(), 220);
+  }
+  saveState();
+  showToast('Car removed');
+}
+
+// ── Toolbar ──
+function bindToolbar() {
+  document.getElementById('btn-reset').addEventListener('click', () => {
+    if (!confirm('Reset board to defaults? This will remove all custom cars and positions.')) return;
+    localStorage.removeItem('garage-planner-v1');
+    cars = [];
+    loadState();
+    renderAll();
+    showToast('Board reset to defaults');
+  });
+
+  document.getElementById('btn-save').addEventListener('click', () => {
+    const json = JSON.stringify({ exportedAt: new Date().toISOString(), cars }, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = 'garage-layout.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('Layout saved as JSON');
+  });
+}
+
+// ── Toast ──
+function createToast() {
+  const el = document.createElement('div');
+  el.id = 'toast';
+  document.body.appendChild(el);
+  return el;
+}
+
+let toastTimer;
+function showToast(msg) {
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 2400);
+}
+
+// ── Util ──
+function escHtml(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+window.addEventListener('DOMContentLoaded', init);
