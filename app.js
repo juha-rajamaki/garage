@@ -124,10 +124,6 @@ function bindSidebar() {
   document.querySelectorAll('.lib-car').forEach(el => {
     const key = el.dataset.key;
     el.addEventListener('click', () => {
-      if (key === 'porsche' && !visible.has(key)) {
-        open3DViewer(key);
-        return;
-      }
       if (visible.has(key)) {
         visible.delete(key);
       } else {
