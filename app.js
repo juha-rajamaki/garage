@@ -9,11 +9,11 @@ const board = document.getElementById('board');
 // These match the crop coordinates used when creating the PNG files.
 const CARS = {
   bmw: {
-    img:    'car-bmw.png',
-    // crop was: left=0, top=300, right=600, bottom=1024 from 1535x1024
-    leftPct: 0 / 1535,
-    topPct:  300 / 1024,
-    widthPct: 600 / 1535,
+    img:     'car-bmw.png',
+    // standalone PNG with transparent bg — position left side of garage floor
+    leftPct:  -0.02,
+    topPct:   0.28,
+    widthPct: 0.40,
   },
   porsche: {
     img:    'car-porsche.png',
