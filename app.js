@@ -1,6 +1,6 @@
 'use strict';
 
-// ── SVG templates for each library car (keyed by "make|model") ──
+// ── SVG templates for each car (keyed by "make|model") ──
 const CAR_SVGS = {
   'BMW|Z4 35is': `<svg viewBox="0 0 80 30" fill="none" xmlns="http://www.w3.org/2000/svg">
     <ellipse cx="40" cy="22" rx="36" ry="6" fill="#1a1a1a" opacity="0.4"/>
@@ -40,131 +40,6 @@ const CAR_SVGS = {
     <rect x="64" y="14" width="8" height="5" rx="1" fill="#f5f5f5" opacity="0.9"/>
     <rect x="6" y="14" width="6" height="5" rx="1" fill="#f5f5f5" opacity="0.7"/>
   </svg>`,
-  'Ferrari|488 GTB': `<svg viewBox="0 0 80 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <ellipse cx="40" cy="22" rx="36" ry="6" fill="#c0392b" opacity="0.3"/>
-    <path d="M8 20 Q12 10 22 8 Q30 5 40 5 Q52 5 62 9 Q70 12 72 20 Z" fill="#c0392b"/>
-    <path d="M20 20 Q22 12 30 10 Q38 8 48 10 Q56 12 58 20" fill="#e74c3c"/>
-    <rect x="14" y="18" width="52" height="5" rx="2" fill="#922b21"/>
-    <circle cx="20" cy="23" r="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
-    <circle cx="20" cy="23" r="2" fill="#333"/>
-    <circle cx="60" cy="23" r="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
-    <circle cx="60" cy="23" r="2" fill="#333"/>
-    <rect x="62" y="14" width="8" height="4" rx="1" fill="#f39c12" opacity="0.8"/>
-  </svg>`,
-  'Lamborghini|Huracán': `<svg viewBox="0 0 80 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <ellipse cx="40" cy="22" rx="36" ry="6" fill="#f39c12" opacity="0.3"/>
-    <path d="M6 20 L16 8 L28 5 L52 5 L66 10 L74 20 Z" fill="#f39c12"/>
-    <path d="M18 20 L24 10 L36 8 L50 9 L60 14 L62 20" fill="#f1c40f"/>
-    <rect x="12" y="18" width="56" height="5" rx="1" fill="#d68910"/>
-    <circle cx="20" cy="23" r="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
-    <circle cx="20" cy="23" r="2" fill="#333"/>
-    <circle cx="60" cy="23" r="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
-    <circle cx="60" cy="23" r="2" fill="#333"/>
-  </svg>`,
-  'McLaren|720S': `<svg viewBox="0 0 80 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <ellipse cx="40" cy="22" rx="36" ry="6" fill="#e67e22" opacity="0.3"/>
-    <path d="M10 20 Q14 9 26 7 Q38 4 50 6 Q62 8 70 20 Z" fill="#e67e22"/>
-    <path d="M22 20 Q26 11 36 9 Q44 7 54 10 Q60 13 62 20" fill="#f39c12"/>
-    <rect x="14" y="18" width="52" height="5" rx="2" fill="#ca6f1e"/>
-    <circle cx="20" cy="23" r="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
-    <circle cx="20" cy="23" r="2" fill="#333"/>
-    <circle cx="60" cy="23" r="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
-    <circle cx="60" cy="23" r="2" fill="#333"/>
-  </svg>`,
-  'BMW|M5': `<svg viewBox="0 0 80 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <ellipse cx="40" cy="22" rx="36" ry="6" fill="#2980b9" opacity="0.3"/>
-    <path d="M8 20 Q10 12 20 9 Q30 6 40 6 Q52 6 62 10 Q70 13 72 20 Z" fill="#2980b9"/>
-    <path d="M18 20 Q20 12 30 10 Q40 8 50 10 Q58 12 60 20" fill="#3498db"/>
-    <rect x="12" y="18" width="56" height="5" rx="2" fill="#1a6f9f"/>
-    <circle cx="20" cy="23" r="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
-    <circle cx="20" cy="23" r="2" fill="#333"/>
-    <circle cx="60" cy="23" r="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
-    <circle cx="60" cy="23" r="2" fill="#333"/>
-  </svg>`,
-  'Mercedes|E63 AMG': `<svg viewBox="0 0 80 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <ellipse cx="40" cy="22" rx="36" ry="6" fill="#7f8c8d" opacity="0.3"/>
-    <path d="M8 20 Q10 12 22 9 Q32 6 42 6 Q54 6 64 10 Q70 13 72 20 Z" fill="#95a5a6"/>
-    <path d="M18 20 Q22 12 32 10 Q42 8 52 10 Q60 13 62 20" fill="#bdc3c7"/>
-    <rect x="12" y="18" width="56" height="5" rx="2" fill="#7f8c8d"/>
-    <circle cx="20" cy="23" r="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
-    <circle cx="20" cy="23" r="2" fill="#333"/>
-    <circle cx="60" cy="23" r="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
-    <circle cx="60" cy="23" r="2" fill="#333"/>
-  </svg>`,
-  'Audi|RS7': `<svg viewBox="0 0 80 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <ellipse cx="40" cy="22" rx="36" ry="6" fill="#c0392b" opacity="0.25"/>
-    <path d="M8 20 Q10 11 22 8 Q34 5 44 6 Q56 6 65 11 Q71 14 72 20 Z" fill="#7f8c8d"/>
-    <path d="M18 20 Q22 11 32 9 Q42 7 52 9 Q60 12 62 20" fill="#95a5a6"/>
-    <rect x="12" y="18" width="56" height="5" rx="2" fill="#616a6b"/>
-    <circle cx="20" cy="23" r="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
-    <circle cx="20" cy="23" r="2" fill="#333"/>
-    <circle cx="60" cy="23" r="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
-    <circle cx="60" cy="23" r="2" fill="#333"/>
-  </svg>`,
-  'Range Rover|Sport SVR': `<svg viewBox="0 0 80 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <ellipse cx="40" cy="25" rx="36" ry="6" fill="#27ae60" opacity="0.3"/>
-    <rect x="10" y="8" width="60" height="16" rx="2" fill="#27ae60"/>
-    <rect x="14" y="5" width="52" height="14" rx="2" fill="#2ecc71"/>
-    <rect x="16" y="7" width="22" height="9" rx="1" fill="#1a3a2a" opacity="0.7"/>
-    <rect x="42" y="7" width="22" height="9" rx="1" fill="#1a3a2a" opacity="0.7"/>
-    <rect x="10" y="22" width="60" height="4" rx="1" fill="#1e8449"/>
-    <circle cx="20" cy="26" r="5" fill="#1a1a1a" stroke="#555" stroke-width="1.5"/>
-    <circle cx="20" cy="26" r="2.5" fill="#333"/>
-    <circle cx="60" cy="26" r="5" fill="#1a1a1a" stroke="#555" stroke-width="1.5"/>
-    <circle cx="60" cy="26" r="2.5" fill="#333"/>
-  </svg>`,
-  'Cadillac|Escalade': `<svg viewBox="0 0 80 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <ellipse cx="40" cy="25" rx="36" ry="6" fill="#1a1a2e" opacity="0.4"/>
-    <rect x="8" y="8" width="64" height="16" rx="1" fill="#2c3e50"/>
-    <rect x="12" y="5" width="56" height="14" rx="1" fill="#34495e"/>
-    <rect x="14" y="7" width="24" height="9" rx="1" fill="#1a2634" opacity="0.8"/>
-    <rect x="42" y="7" width="24" height="9" rx="1" fill="#1a2634" opacity="0.8"/>
-    <rect x="8" y="22" width="64" height="4" rx="1" fill="#1c2833"/>
-    <circle cx="20" cy="26" r="5" fill="#1a1a1a" stroke="#555" stroke-width="1.5"/>
-    <circle cx="20" cy="26" r="2.5" fill="#333"/>
-    <circle cx="60" cy="26" r="5" fill="#1a1a1a" stroke="#555" stroke-width="1.5"/>
-    <circle cx="60" cy="26" r="2.5" fill="#333"/>
-  </svg>`,
-  'Porsche|911 Cabriolet': `<svg viewBox="0 0 80 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <ellipse cx="40" cy="22" rx="36" ry="6" fill="#8e44ad" opacity="0.3"/>
-    <path d="M8 20 Q10 14 20 12 Q30 9 40 9 Q52 10 62 13 Q70 16 72 20 Z" fill="#8e44ad"/>
-    <path d="M22 20 Q25 13 34 11 Q42 9 52 12 Q58 14 60 20" fill="#9b59b6" opacity="0.7"/>
-    <rect x="12" y="18" width="56" height="5" rx="2" fill="#6c3483"/>
-    <circle cx="20" cy="23" r="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
-    <circle cx="20" cy="23" r="2" fill="#333"/>
-    <circle cx="60" cy="23" r="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
-    <circle cx="60" cy="23" r="2" fill="#333"/>
-  </svg>`,
-  'Tesla|Model S Plaid': `<svg viewBox="0 0 80 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <ellipse cx="40" cy="22" rx="36" ry="6" fill="#1abc9c" opacity="0.3"/>
-    <path d="M8 20 Q10 12 22 9 Q32 6 42 6 Q54 6 63 10 Q70 13 72 20 Z" fill="#1abc9c"/>
-    <path d="M18 20 Q22 12 32 10 Q42 8 52 10 Q60 12 62 20" fill="#16a085"/>
-    <rect x="12" y="18" width="56" height="5" rx="2" fill="#148f77"/>
-    <circle cx="20" cy="23" r="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
-    <circle cx="20" cy="23" r="2" fill="#333"/>
-    <circle cx="60" cy="23" r="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
-    <circle cx="60" cy="23" r="2" fill="#333"/>
-  </svg>`,
-  'Rimac|Nevera': `<svg viewBox="0 0 80 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <ellipse cx="40" cy="22" rx="36" ry="6" fill="#8e44ad" opacity="0.25"/>
-    <path d="M8 20 Q12 9 24 7 Q36 4 46 5 Q60 6 68 14 Q72 17 72 20 Z" fill="#6c3483"/>
-    <path d="M20 20 Q24 11 34 9 Q44 7 54 9 Q62 13 64 20" fill="#8e44ad"/>
-    <rect x="12" y="18" width="56" height="5" rx="2" fill="#5b2c6f"/>
-    <circle cx="20" cy="23" r="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
-    <circle cx="20" cy="23" r="2" fill="#333"/>
-    <circle cx="60" cy="23" r="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
-    <circle cx="60" cy="23" r="2" fill="#333"/>
-  </svg>`,
-  'Ford|Mustang GT500': `<svg viewBox="0 0 80 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <ellipse cx="40" cy="22" rx="36" ry="6" fill="#c0392b" opacity="0.3"/>
-    <path d="M6 20 Q8 12 18 9 Q28 6 40 6 Q52 6 62 9 Q70 12 74 20 Z" fill="#c0392b"/>
-    <path d="M16 20 Q18 11 28 9 Q38 7 50 9 Q58 12 60 20" fill="#e74c3c"/>
-    <rect x="10" y="18" width="60" height="5" rx="2" fill="#922b21"/>
-    <circle cx="18" cy="23" r="4.5" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
-    <circle cx="18" cy="23" r="2.5" fill="#333"/>
-    <circle cx="62" cy="23" r="4.5" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
-    <circle cx="62" cy="23" r="2.5" fill="#333"/>
-  </svg>`,
 };
 
 function getSvg(make, model) {
@@ -173,18 +48,9 @@ function getSvg(make, model) {
 
 // ── Library car definitions (same order as sidebar HTML) ──
 const LIBRARY_CARS = [
-  { make: 'Ferrari',     model: '488 GTB' },
-  { make: 'Lamborghini', model: 'Huracán' },
-  { make: 'McLaren',     model: '720S' },
-  { make: 'BMW',         model: 'M5' },
-  { make: 'Mercedes',    model: 'E63 AMG' },
-  { make: 'Audi',        model: 'RS7' },
-  { make: 'Range Rover', model: 'Sport SVR' },
-  { make: 'Cadillac',    model: 'Escalade' },
-  { make: 'Porsche',     model: '911 Cabriolet' },
-  { make: 'Tesla',       model: 'Model S Plaid' },
-  { make: 'Rimac',       model: 'Nevera' },
-  { make: 'Ford',        model: 'Mustang GT500' },
+  { make: 'BMW',     model: 'Z4 35is' },
+  { make: 'Porsche', model: 'Panamera E-Hybrid' },
+  { make: 'Jeep',    model: 'Wrangler Rubicon' },
 ];
 
 // ── State ──

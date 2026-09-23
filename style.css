@@ -137,21 +137,6 @@ html, body {
   line-height: 1.4;
 }
 
-.library-section {
-  margin-bottom: 20px;
-}
-
-.section-label {
-  font-size: 0.65rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #555;
-  margin-bottom: 8px;
-  padding-bottom: 4px;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-
 .library-grid {
   display: flex;
   flex-direction: column;
